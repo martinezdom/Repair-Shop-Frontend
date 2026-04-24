@@ -28,11 +28,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex justify-center">
-    <h2 v-if="errorMessage">{{ errorMessage }}</h2>
-    <table>
-      <thead>
-        <tr>
+  <div class="flex justify-center text-slate-800 dark:text-slate-300">
+    <h2 v-if="errorMessage" class="text-red-700 dark:text-red-300">{{ errorMessage }}</h2>
+    <table class="border-slate-800 dark:border-slate-300">
+      <thead class="border-slate-800 dark:border-slate-300">
+        <tr class="p-6">
           <th>Id</th>
           <th>Matrícula</th>
           <th>Estado</th>
@@ -40,7 +40,7 @@ onMounted(() => {
           <th>Descripción</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="border-slate-800 dark:border-slate-300">
         <tr v-for="repair in repairs" :key="repair.id">
           <td>{{ repair.id }}</td>
           <td>{{ repair.vehicleLicensePlate }}</td>

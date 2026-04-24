@@ -7,11 +7,11 @@ const route = useRoute()
 
 <template>
   <div id="wrapper" class="min-h-screen">
-    <header class="bg-slate-500 dark:bg-slate-700 shadow-md">
+    <header class="bg-slate-300 shadow-md dark:bg-slate-800">
       <NavBar v-if="route.meta.requiresAuth" />
     </header>
 
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto flex min-h-screen items-center justify-center p-4">
       <RouterView />
     </main>
   </div>
