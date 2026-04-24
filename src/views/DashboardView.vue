@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { api } from '@/services/api'
-import { useRouter } from 'vue-router'
 
 type Repair = {
   id: number
@@ -11,7 +10,6 @@ type Repair = {
   description: string
 }
 
-const router = useRouter()
 const repairs = ref<Repair[]>([])
 const errorMessage = ref('')
 async function fetchRepairs() {
@@ -24,19 +22,13 @@ async function fetchRepairs() {
   }
 }
 
-function logout() {
-  localStorage.removeItem('token')
-  router.push('/login')
-}
-
 onMounted(() => {
   fetchRepairs()
 })
 </script>
 
 <template>
-  <div>
-    <button @click="logout">Cerrar sesión</button>
+  <div class="flex justify-center">
     <h2 v-if="errorMessage">{{ errorMessage }}</h2>
     <table>
       <thead>
