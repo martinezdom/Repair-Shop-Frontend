@@ -1,5 +1,5 @@
 export type Repair = {
-  id: bigint
+  id: number
   vehicleLicensePlate: string
   status: string
   mechanicName: string
@@ -8,10 +8,10 @@ export type Repair = {
 }
 
 export type Vehicle = {
-  id: bigint
+  id: number
   licensePlate: string
   brand: string
   model: string
   year: number
-  customerId: string
+  customerId: number
 }

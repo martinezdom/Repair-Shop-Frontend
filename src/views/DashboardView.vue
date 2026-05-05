@@ -39,7 +39,7 @@ onMounted(() => {
     class="text-text-on-light dark:text-text-on-dark flex flex-col justify-center gap-3 px-4 py-8"
   >
     <div v-if="!isModalOpen" class="flex flex-col gap-2">
-      <div class="flex justify-end gap-6">
+      <div class="flex justify-end gap-4">
         <button
           :disabled="currentPage === 0"
           @click="previousPage()"
@@ -109,7 +109,7 @@ onMounted(() => {
     <button
       v-if="!isModalOpen"
       @click="((editingId = null), openModal())"
-      class="bg-primary cursor-pointer rounded-btn dark:bg-primary-dark px-6 py-3 font-semibold text-white"
+      class="bg-primary rounded-btn dark:bg-primary-dark cursor-pointer px-6 py-3 font-semibold text-white"
     >
       Nueva reparación
     </button>
@@ -201,7 +201,7 @@ onMounted(() => {
         </div>
 
         <button type="submit" class="bg-primary mt-4 rounded py-2 font-bold text-white">
-          Guardar Reparación
+          Guardar reparación
         </button>
       </form>
     </div>

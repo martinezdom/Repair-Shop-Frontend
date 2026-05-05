@@ -104,7 +104,7 @@ export function useRepairs() {
     }
   }
 
-  async function deleteRepair(id: bigint) {
+  async function deleteRepair(id: number) {
     try {
       if (confirm('¿Estás seguro que quieres borrar está reparación?')) {
         await api(`/repairs/${id}`, 'DELETE')
@@ -125,7 +125,7 @@ export function useRepairs() {
   }
 
   function openEditModal(repair: Repair) {
-    editingId.value = Number(repair.id)
+    editingId.value = repair.id
     form.value.description = repair.description
     const mechanic = mechanicsList.value.find((m) => m.username === repair.mechanicName)
     form.value.mechanicId = mechanic ? mechanic.id : null

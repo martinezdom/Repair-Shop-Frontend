@@ -30,7 +30,7 @@ export function useVehicles() {
     }
   }
 
-  async function deleteVehicle(id: bigint) {
+  async function deleteVehicle(id: number) {
     try {
       if (confirm('¿Estás seguro que quieres borrar este vehículo?')) {
         await api(`/vehicles/${id}`, 'DELETE')
@@ -79,7 +79,7 @@ export function useVehicles() {
       console.error('Error enviando formulario:', error)
     }
   }
-    async function fetchCustomers() {
+  async function fetchCustomers() {
     try {
       const response = await api('/customers?size=1000')
       customersList.value = response.content || response
@@ -87,6 +87,11 @@ export function useVehicles() {
       errorMessage.value = 'Error al cargar los clientes'
       console.error(error)
     }
+  }
+
+  function getGetCustomerFullName(customerId: number | null): string {
+    const customer = customersList.value.find((c) => String(c.id) === String(customerId))
+    return customer ? `${customer.firstName} ${customer.lastName}` : 'Desconocido'
   }
 
   function nextPage() {
@@ -108,14 +113,15 @@ export function useVehicles() {
   }
 
   function openEditModal(vehicle: Vehicle) {
-    editingId.value = Number(vehicle.id)
+    editingId.value = vehicle.id
     form.value.brand = vehicle.brand
     form.value.model = vehicle.model
     form.value.licensePlate = vehicle.licensePlate
     form.value.year = vehicle.year
-    form.value.customerId = Number(vehicle.customerId)
+    form.value.customerId = vehicle.customerId
     isModalOpen.value = true
   }
+
   return {
     vehicles,
     fetchVehicles,
@@ -133,6 +139,7 @@ export function useVehicles() {
     deleteVehicle,
     submitVehicle,
     customersList,
-    fetchCustomers
+    fetchCustomers,
+    getGetCustomerFullName,
   }
 }
