@@ -33,25 +33,27 @@ async function login() {
 
 <template>
   <div
-    class="w-full max-w-md rounded-2xl border border-slate-800/20 bg-slate-300 p-6 text-slate-800 dark:border-slate-300/20 dark:bg-slate-800 dark:text-slate-300"
+    class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-card w-full max-w-md border p-6"
   >
     <h2 class="mb-6 text-center text-xl font-semibold">Formulario de inicio de sesión</h2>
 
     <form @submit.prevent="login" class="flex flex-col gap-4">
       <div class="flex flex-col gap-1.5">
-        <label for="email" class="font-medium text-slate-800 dark:text-slate-300">Email</label>
+        <label for="email" class="text-text-on-light dark:text-text-on-dark font-medium"
+          >Email</label
+        >
         <input
           id="email"
           v-model="email"
           type="email"
           required
-          class="w-full rounded-lg border border-slate-800 bg-slate-300 px-3 py-2 text-slate-800 transition dark:border-slate-300 dark:bg-slate-800 dark:text-slate-300"
+          class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
           placeholder="tu@email.com"
         />
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="password" class="font-medium text-slate-800 dark:text-slate-300"
+        <label for="password" class="text-text-on-light dark:text-text-on-dark font-medium"
           >Contraseña</label
         >
         <input
@@ -59,14 +61,14 @@ async function login() {
           v-model="password"
           type="password"
           required
-          class="w-full rounded-lg border border-slate-800 bg-slate-300 px-3 py-2 text-slate-800 transition dark:border-slate-300 dark:bg-slate-800 dark:text-slate-300"
+          class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
           placeholder="••••••••"
         />
       </div>
 
       <button
         type="submit"
-        class="mt-2 cursor-pointer rounded-lg border border-slate-800 bg-slate-800 px-4 py-2 font-medium text-slate-300 transition hover:bg-slate-300 hover:text-slate-800 dark:border-slate-300 dark:bg-slate-300 dark:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+        class="border-border-light dark:border-border-dark rounded-btn bg-primary dark:bg-primary mt-2 border px-4 py-2 font-medium text-white dark:text-white"
       >
         Entrar
       </button>
@@ -74,7 +76,7 @@ async function login() {
 
     <p
       v-if="errorMessage"
-      class="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/60 dark:text-red-300"
+      class="rounded-btn mt-4 border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/60 dark:text-red-300"
     >
       {{ errorMessage }}
     </p>

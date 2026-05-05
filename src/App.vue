@@ -6,13 +6,13 @@ const route = useRoute()
 </script>
 
 <template>
-  <div id="wrapper" class="min-h-screen">
-    <header class="bg-slate-300 shadow-md dark:bg-slate-800">
-      <NavBar v-if="route.meta.requiresAuth" />
-    </header>
+ <div id="wrapper" class="min-h-screen">
+ <header class="bg-bg-light dark:bg-bg-dark shadow-md">
+ <NavBar v-if="route.meta.requiresAuth" />
+ </header>
 
-    <main class="container mx-auto flex min-h-screen items-center justify-center p-4">
-      <RouterView />
-    </main>
-  </div>
+ <main class="container mx-auto flex min-h-screen items-center justify-center p-4">
+ <RouterView />
+ </main>
+ </div>
 </template>

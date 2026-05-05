@@ -1,2 +1,31 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Fondos y Texto (Modo Claro/Oscuro) */
+  --color-bg-light: #f8fafc;
+  --color-bg-dark: #0f172a;
+  --color-text-on-light: #0f1724;
+  --color-text-on-dark: #e6eef8;
+  --color-muted-light: #475569;
+  --color-muted-dark: #94a3b8;
+
+  /* Bordes y Overlays */
+  --color-border-light: #cbd5e1;
+  --color-border-dark: #374151;
+  --color-overlay-light: rgba(255, 255, 255, 0.8);
+  --color-overlay-dark: rgba(15, 23, 36, 0.8);
+
+  /* Colores de Marca */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+
+  /* Colores de Estado */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  /* Radio de bordes base */
+  --radius-card: 16px;
+  --radius-btn: 8px;
+}

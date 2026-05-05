@@ -1,6 +1,5 @@
 import DashboardView from '@/views/DashboardView.vue'
 import LoginView from '@/views/LoginView.vue'
-import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -8,9 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: true },
+      redirect: { name: 'dashboard' },
     },
     {
       path: '/login',
@@ -26,15 +23,18 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const isAuthenticated = !!localStorage.getItem('token')
+
   if (to.meta.requiresAuth && !isAuthenticated) {
-    return '/login'
-  } else if (to.path === '/login' && isAuthenticated) {
-    return '/dashboard'
-  } else {
-    return true
+    return { name: 'login' }
   }
+
+  if (to.name === 'login' && isAuthenticated) {
+    return { name: 'dashboard' }
+  }
+
+  return true
 })
 
 export default router

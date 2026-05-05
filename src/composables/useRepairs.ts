@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { api } from '@/services/api'
-import { formatStatus } from '@/utils/main'
+import { formatStatus, formatCost } from '@/utils/main'
 import type { Repair } from '@/types'
 
 export function useRepairs() {
@@ -8,6 +8,8 @@ export function useRepairs() {
   const errorMessage = ref('')
   const isModalOpen = ref(false)
   const editingId = ref<number | null>(null)
+  const currentPage = ref(0)
+  const totalPages = ref(1)
 
   const form = ref({
     description: '',
@@ -28,8 +30,9 @@ export function useRepairs() {
 
   async function fetchRepairs() {
     try {
-      const response = await api('/repairs')
+      const response = await api(`/repairs?page=${currentPage.value}&size=10`)
       repairs.value = response.content || response
+      totalPages.value = response.totalPages || 1
     } catch (error) {
       errorMessage.value = 'Error al cargar las reparaciones'
       console.error(error)
@@ -44,6 +47,16 @@ export function useRepairs() {
       errorMessage.value = 'Error al cargar los mecánicos'
       console.error(error)
     }
+  }
+
+  function nextPage() {
+    currentPage.value++
+    fetchRepairs()
+  }
+
+  function previousPage() {
+    currentPage.value--
+    fetchRepairs()
   }
 
   async function fetchVehicles() {
@@ -141,5 +154,10 @@ export function useRepairs() {
     closeModal,
     openEditModal,
     formatStatus,
+    formatCost,
+    previousPage,
+    nextPage,
+    currentPage,
+    totalPages,
   }
 }

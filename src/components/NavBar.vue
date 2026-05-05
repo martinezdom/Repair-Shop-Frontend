@@ -86,21 +86,21 @@ function logout() {
 
 <template>
   <nav class="container mx-auto flex items-center justify-between p-4">
-    <ul class="flex gap-6 font-medium text-slate-800 dark:text-slate-300">
+    <ul class="text-text-on-light dark:text-text-on-dark flex gap-6 font-medium">
       <MenuItem v-for="item in menuItems" :key="item.to" :to="item.to" :label="item.label" />
     </ul>
 
     <div class="flex items-center gap-2">
       <button
         @click="cycleTheme"
-        class="cursor-pointer rounded bg-slate-800 px-4 py-2 font-bold text-slate-300 transition-colors hover:bg-slate-700 dark:bg-slate-300 dark:text-slate-800"
+        class="bg-primary dark:bg-primary cursor-pointer rounded px-4 py-2 font-bold text-white dark:text-white"
       >
         {{ themeLabel }}
       </button>
 
       <button
         @click="logout"
-        class="cursor-pointer rounded bg-red-500 px-4 py-2 font-bold text-white transition-colors hover:bg-red-600 dark:bg-red-600"
+        class="bg-error cursor-pointer rounded px-4 py-2 font-bold text-white dark:bg-red-600"
       >
         Cerrar sesión
       </button>
