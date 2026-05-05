@@ -6,3 +6,12 @@ export type Repair = {
   description: string
   cost: number
 }
+
+export type Vehicle = {
+  id: bigint
+  licensePlate: string
+  brand: string
+  model: string
+  year: number
+  customerId: string
+}

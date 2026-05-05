@@ -30,7 +30,7 @@ export function useRepairs() {
 
   async function fetchRepairs() {
     try {
-      const response = await api(`/repairs?page=${currentPage.value}&size=10`)
+      const response = await api(`/repairs?page=${currentPage.value}`)
       repairs.value = response.content || response
       totalPages.value = response.totalPages || 1
     } catch (error) {

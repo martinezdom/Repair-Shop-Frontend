@@ -1,4 +1,5 @@
 import DashboardView from '@/views/DashboardView.vue'
+import VehiclesView from '@/views/VehiclesView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -18,6 +19,12 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/vehicles',
+      name: 'vehicles',
+      component: VehiclesView,
       meta: { requiresAuth: true },
     },
   ],

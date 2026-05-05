@@ -109,7 +109,7 @@ onMounted(() => {
     <button
       v-if="!isModalOpen"
       @click="((editingId = null), openModal())"
-      class="bg-primary rounded-btn dark:bg-primary-dark px-6 py-3 font-semibold text-white"
+      class="bg-primary cursor-pointer rounded-btn dark:bg-primary-dark px-6 py-3 font-semibold text-white"
     >
       Nueva reparación
     </button>
