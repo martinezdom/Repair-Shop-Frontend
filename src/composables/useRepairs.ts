@@ -2,14 +2,14 @@ import { ref } from 'vue'
 import { api } from '@/services/api'
 import { formatStatus, formatCost } from '@/utils/main'
 import type { Repair } from '@/types'
+import { usePagination } from '@/composables/usePagination'
 
 export function useRepairs() {
+  const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchRepairs)
   const repairs = ref<Repair[]>([])
   const errorMessage = ref('')
   const isModalOpen = ref(false)
   const editingId = ref<number | null>(null)
-  const currentPage = ref(0)
-  const totalPages = ref(1)
 
   const form = ref({
     description: '',
@@ -47,16 +47,6 @@ export function useRepairs() {
       errorMessage.value = 'Error al cargar los mecánicos'
       console.error(error)
     }
-  }
-
-  function nextPage() {
-    currentPage.value++
-    fetchRepairs()
-  }
-
-  function previousPage() {
-    currentPage.value--
-    fetchRepairs()
   }
 
   async function fetchVehicles() {
