@@ -1,5 +1,6 @@
 import DashboardView from '@/views/DashboardView.vue'
 import VehiclesView from '@/views/VehiclesView.vue'
+import CustomersView from '@/views/CustomersView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -25,6 +26,12 @@ const router = createRouter({
       path: '/vehicles',
       name: 'vehicles',
       component: VehiclesView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/customers',
+      name: 'customers',
+      component: CustomersView,
       meta: { requiresAuth: true },
     },
   ],

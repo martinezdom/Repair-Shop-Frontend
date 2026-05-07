@@ -106,6 +106,16 @@ export function useRepairs() {
     }
   }
 
+  function resetForm() {
+    form.value = {
+      description: '',
+      mechanicId: null,
+      vehicleId: null,
+      status: null,
+      cost: null,
+    }
+  }
+
   function openEditModal(repair: Repair) {
     openBaseModal(repair.id)
     form.value.description = repair.description
@@ -140,5 +150,6 @@ export function useRepairs() {
     nextPage,
     currentPage,
     totalPages,
+    resetForm,
   }
 }

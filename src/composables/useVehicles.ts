@@ -3,10 +3,12 @@ import { api } from '@/services/api'
 import type { Vehicle } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
+import { useCustomers } from './useCustomers'
 
 export function useVehicles() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchVehicles)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
+  const { getCustomerFullName } = useCustomers()
 
   const form = ref({
     brand: '',
@@ -90,9 +92,14 @@ export function useVehicles() {
     }
   }
 
-  function getGetCustomerFullName(customerId: number | null): string {
-    const customer = customersList.value.find((c) => String(c.id) === String(customerId))
-    return customer ? `${customer.firstName} ${customer.lastName}` : 'Desconocido'
+  function resetForm() {
+    form.value = {
+      brand: '',
+      model: '',
+      customerId: null,
+      year: null,
+      licensePlate: '',
+    }
   }
 
   function openEditModal(vehicle: Vehicle) {
@@ -122,6 +129,7 @@ export function useVehicles() {
     submitVehicle,
     customersList,
     fetchCustomers,
-    getGetCustomerFullName,
+    getCustomerFullName,
+    resetForm,
   }
 }

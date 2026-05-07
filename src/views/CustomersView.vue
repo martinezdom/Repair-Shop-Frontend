@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useVehicles } from '@/composables/useVehicles'
+import { useCustomers } from '@/composables/useCustomers'
 
 const {
-  vehicles,
-  fetchVehicles,
+  customers,
   form,
   errorMessage,
   nextPage,
@@ -16,16 +15,14 @@ const {
   totalPages,
   editingId,
   isModalOpen,
-  deleteVehicle,
-  submitVehicle,
-  customersList,
+  submitCustomer,
   fetchCustomers,
-  getCustomerFullName,
-  resetForm,
-} = useVehicles()
+  deleteCustomer,
+  resetForm
+} = useCustomers()
 
 onMounted(() => {
-  ;(fetchVehicles(), fetchCustomers())
+  fetchCustomers()
 })
 </script>
 
@@ -63,32 +60,29 @@ onMounted(() => {
           >
             <tr>
               <th class="px-4 py-4">Id</th>
-              <th class="px-4 py-4">Marca</th>
-              <th class="px-4 py-4">Modelo</th>
-              <th class="px-4 py-4">Matrícula</th>
-              <th class="px-4 py-4">Año</th>
-              <th class="px-4 py-4">Propietario</th>
-              <th class="px-4 py-4">Acciones</th>
+              <th class="px-4 py-4">Nonbre</th>
+              <th class="px-4 py-4">Apellidos</th>
+              <th class="px-4 py-4">Email</th>
+              <th class="px-4 py-4">Teléfono</th>
             </tr>
           </thead>
 
           <tbody class="divide-border-light dark:divide-border-dark divide-y">
-            <tr v-for="vehicle in vehicles" :key="String(vehicle.id)" class="">
-              <td class="px-4 py-4">{{ vehicle.id }}</td>
-              <td class="px-4 py-4">{{ vehicle.brand }}</td>
-              <td class="px-4 py-4">{{ vehicle.model }}</td>
-              <td class="px-4 py-4">{{ vehicle.licensePlate }}</td>
-              <td class="px-4 py-4">{{ vehicle.year }}</td>
-              <td class="px-4 py-4">{{ getCustomerFullName(Number(vehicle.customerId)) }}</td>
+            <tr v-for="customer in customers" :key="String(customer.id)" class="">
+              <td class="px-4 py-4">{{ customer.id }}</td>
+              <td class="px-4 py-4">{{ customer.firstName }}</td>
+              <td class="px-4 py-4">{{ customer.lastName }}</td>
+              <td class="px-4 py-4">{{ customer.email }}</td>
+              <td class="px-4 py-4">{{ customer.phone }}</td>
               <td class="flex items-center justify-center gap-3 px-4 py-4">
-                <button @click="openEditModal(vehicle)" class="">
+                <button @click="openEditModal(customer)" class="">
                   <img
                     src="../assets/icons/pencil.svg"
                     alt="Editar"
                     class="h-5 w-5 cursor-pointer dark:invert"
                   />
                 </button>
-                <button @click="deleteVehicle(vehicle.id)" class="">
+                <button @click="deleteCustomer(customer.id)" class="">
                   <img
                     src="../assets/icons/trash.svg"
                     alt="Eliminar"
@@ -106,7 +100,7 @@ onMounted(() => {
       @click="((editingId = null), openModal())"
       class="bg-primary rounded-btn dark:bg-primary-dark cursor-pointer px-6 py-3 font-semibold text-white"
     >
-      Añadir vehículo
+      Añadir cliente
     </button>
   </div>
   <div
@@ -118,7 +112,7 @@ onMounted(() => {
     >
       <div class="mb-6 flex items-center justify-between">
         <h3 class="text-xl font-bold">
-          {{ editingId ? 'Editar vehículo' : 'Crear Vehículo' }}
+          {{ editingId ? 'Editar cliente' : 'Crear cliente' }}
         </h3>
         <button
           @click="
@@ -131,32 +125,12 @@ onMounted(() => {
         </button>
       </div>
 
-      <form @submit.prevent="submitVehicle" class="flex flex-col gap-4">
+      <form @submit.prevent="submitCustomer" class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
-          <label for="brand" class="font-medium">Marca</label>
+          <label for="firstName" class="font-medium">Nombre</label>
           <input
-            id="brand"
-            v-model="form.brand"
-            required
-            class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
-          />
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <label for="model" class="font-medium">Modelo</label>
-          <input
-            id="model"
-            v-model="form.model"
-            required
-            class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
-          />
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <label for="licensePlate" class="font-medium">Matrícula</label>
-          <input
-            id="licensePlate"
-            v-model="form.licensePlate"
+            id="firstName"
+            v-model="form.firstName"
             required
             :disabled="editingId !== null"
             class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -164,37 +138,41 @@ onMounted(() => {
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="year" class="font-medium">Año</label>
+          <label for="lastName" class="font-medium">Apellidos</label>
           <input
-            type="number"
-            id="year"
-            v-model="form.year"
+            id="lastName"
+            v-model="form.lastName"
+            required
+            :disabled="editingId !== null"
+            class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label for="email" class="font-medium">Email</label>
+          <input
+            id="email"
+            v-model="form.email"
             required
             class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
           />
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="mechanic" class="font-medium">Propietario</label>
-          <select
-            id="mechanic"
-            v-model="form.customerId"
+          <label for="phone" class="font-medium">Teléfono</label>
+          <input
+            id="phone"
+            v-model="form.phone"
             required
-            :disabled="editingId !== null"
-            class="border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark accent-primary rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option value="" disabled selected>Seleccione un propietario</option>
-            <option v-for="c in customersList" :key="c.id" :value="c.id">
-              {{ c.firstName }} {{ c.lastName }}
-            </option>
-          </select>
+            class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
+          />
         </div>
 
         <button
           type="submit"
           class="bg-primary mt-4 cursor-pointer rounded py-2 font-bold text-white"
         >
-          Guardar vehículo
+          Guardar cliente
         </button>
       </form>
     </div>

@@ -25,6 +25,7 @@ const {
   previousPage,
   currentPage,
   totalPages,
+  resetForm,
 } = useRepairs()
 
 onMounted(() => {
@@ -125,7 +126,13 @@ onMounted(() => {
         <h3 class="text-xl font-bold">
           {{ editingId ? 'Editar reparación' : 'Crear Reparación' }}
         </h3>
-        <button @click="closeModal()" class="">
+        <button
+          @click="
+            closeModal();
+            resetForm()
+          "
+          class="cursor-pointer"
+        >
           <img src="../assets/icons/close-x.svg" alt="Cerrar" class="h-6 w-6 dark:invert" />
         </button>
       </div>
@@ -200,7 +207,10 @@ onMounted(() => {
           />
         </div>
 
-        <button type="submit" class="bg-primary mt-4 rounded py-2 font-bold text-white">
+        <button
+          type="submit"
+          class="bg-primary mt-4 cursor-pointer rounded py-2 font-bold text-white"
+        >
           Guardar reparación
         </button>
       </form>
