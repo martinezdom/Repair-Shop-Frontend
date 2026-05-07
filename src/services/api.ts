@@ -22,6 +22,11 @@ export async function api(endpoint: string, method: string = 'GET', body?: any) 
   const response = await fetch(`${BASE_URL}${endpoint}`, config)
 
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem('token')
+      window.location.href = '/login'
+      throw new Error('Sesión caducada')
+    }
     throw new Error(`Error en la API: ${response.status}`)
   }
 
