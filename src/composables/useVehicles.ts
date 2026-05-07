@@ -2,11 +2,12 @@ import { ref } from 'vue'
 import { api } from '@/services/api'
 import type { Vehicle } from '@/types'
 import { usePagination } from '@/composables/usePagination'
+import { useModal } from './useModal'
 
 export function useVehicles() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchVehicles)
+  const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
 
-  const editingId = ref<number | null>(null)
   const form = ref({
     brand: '',
     model: '',
@@ -17,7 +18,6 @@ export function useVehicles() {
 
   const vehicles = ref<Vehicle[]>([])
   const errorMessage = ref('')
-  const isModalOpen = ref(false)
   const customersList = ref<any[]>([])
 
   async function fetchVehicles() {
@@ -95,22 +95,13 @@ export function useVehicles() {
     return customer ? `${customer.firstName} ${customer.lastName}` : 'Desconocido'
   }
 
-  function openModal() {
-    isModalOpen.value = true
-  }
-
-  function closeModal() {
-    isModalOpen.value = false
-  }
-
   function openEditModal(vehicle: Vehicle) {
-    editingId.value = vehicle.id
+    openBaseModal(vehicle.id)
     form.value.brand = vehicle.brand
     form.value.model = vehicle.model
     form.value.licensePlate = vehicle.licensePlate
     form.value.year = vehicle.year
     form.value.customerId = vehicle.customerId
-    isModalOpen.value = true
   }
 
   return {

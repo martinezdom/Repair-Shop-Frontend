@@ -3,13 +3,13 @@ import { api } from '@/services/api'
 import { formatStatus, formatCost } from '@/utils/main'
 import type { Repair } from '@/types'
 import { usePagination } from '@/composables/usePagination'
+import { useModal } from './useModal'
 
 export function useRepairs() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchRepairs)
+  const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
   const repairs = ref<Repair[]>([])
   const errorMessage = ref('')
-  const isModalOpen = ref(false)
-  const editingId = ref<number | null>(null)
 
   const form = ref({
     description: '',
@@ -106,16 +106,8 @@ export function useRepairs() {
     }
   }
 
-  function openModal() {
-    isModalOpen.value = true
-  }
-
-  function closeModal() {
-    isModalOpen.value = false
-  }
-
   function openEditModal(repair: Repair) {
-    editingId.value = repair.id
+    openBaseModal(repair.id)
     form.value.description = repair.description
     const mechanic = mechanicsList.value.find((m) => m.username === repair.mechanicName)
     form.value.mechanicId = mechanic ? mechanic.id : null
@@ -123,7 +115,6 @@ export function useRepairs() {
     form.value.vehicleId = vehicle ? vehicle.id : null
     form.value.status = repair.status
     form.value.cost = repair.cost || 0
-    isModalOpen.value = true
   }
 
   return {
