@@ -8,9 +8,9 @@ import { useModal } from './useModal'
 export function useRepairs() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchRepairs)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
+
   const repairs = ref<Repair[]>([])
   const errorMessage = ref('')
-
   const form = ref({
     description: '',
     mechanicId: null as number | null,
@@ -18,10 +18,8 @@ export function useRepairs() {
     status: null as string | null,
     cost: null as number | null,
   })
-
   const mechanicsList = ref<any[]>([])
   const vehiclesList = ref<any[]>([])
-
   const statusOptions = [
     { value: 'pendiente', label: 'Pendiente' },
     { value: 'en progreso', label: 'En Progreso' },
@@ -136,20 +134,20 @@ export function useRepairs() {
     mechanicsList,
     vehiclesList,
     statusOptions,
+    currentPage,
+    totalPages,
     fetchRepairs,
     fetchMechanics,
     fetchVehicles,
     submitRepair,
     deleteRepair,
-    openModal,
-    closeModal,
+    resetForm,
     openEditModal,
     formatStatus,
     formatCost,
     previousPage,
     nextPage,
-    currentPage,
-    totalPages,
-    resetForm,
+    openModal,
+    closeModal,
   }
 }

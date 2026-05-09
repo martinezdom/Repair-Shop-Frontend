@@ -14,9 +14,19 @@ export function useCustomers() {
     email: '',
     phone: '',
   })
-
   const customers = ref<Customer[]>([])
   const errorMessage = ref('')
+
+  async function fetchCustomers() {
+    try {
+      const response = await api(`/customers?page=${currentPage.value}`)
+      customers.value = response.content || response
+      totalPages.value = response.totalPages || 1
+    } catch (error) {
+      errorMessage.value = 'Error al cargar los clientes'
+      console.error(error)
+    }
+  }
 
   async function submitCustomer() {
     try {
@@ -50,16 +60,6 @@ export function useCustomers() {
         errorMessage.value = 'Error al crear el cliente. Revisa los datos.'
       }
       console.error('Error enviando formulario:', error)
-    }
-  }
-  async function fetchCustomers() {
-    try {
-      const response = await api(`/customers?page=${currentPage.value}`)
-      customers.value = response.content || response
-      totalPages.value = response.totalPages || 1
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los clientes'
-      console.error(error)
     }
   }
 
@@ -101,19 +101,19 @@ export function useCustomers() {
     customers,
     form,
     errorMessage,
-    nextPage,
-    previousPage,
-    openModal,
-    closeModal,
-    openEditModal,
     currentPage,
     totalPages,
     editingId,
     isModalOpen,
-    submitCustomer,
     fetchCustomers,
-    getCustomerFullName,
+    submitCustomer,
     deleteCustomer,
-    resetForm
+    resetForm,
+    getCustomerFullName,
+    openEditModal,
+    nextPage,
+    previousPage,
+    openModal,
+    closeModal
   }
 }

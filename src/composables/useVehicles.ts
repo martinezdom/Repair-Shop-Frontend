@@ -17,7 +17,6 @@ export function useVehicles() {
     year: null as number | null,
     customerId: null as number | null,
   })
-
   const vehicles = ref<Vehicle[]>([])
   const errorMessage = ref('')
   const customersList = ref<any[]>([])
@@ -33,14 +32,12 @@ export function useVehicles() {
     }
   }
 
-  async function deleteVehicle(id: number) {
+  async function fetchCustomers() {
     try {
-      if (confirm('¿Estás seguro que quieres borrar este vehículo?')) {
-        await api(`/vehicles/${id}`, 'DELETE')
-        await fetchVehicles()
-      }
+      const response = await api('/customers?size=1000')
+      customersList.value = response.content || response
     } catch (error) {
-      errorMessage.value = 'Error al eliminar el vehículo'
+      errorMessage.value = 'Error al cargar los clientes'
       console.error(error)
     }
   }
@@ -82,12 +79,15 @@ export function useVehicles() {
       console.error('Error enviando formulario:', error)
     }
   }
-  async function fetchCustomers() {
+
+  async function deleteVehicle(id: number) {
     try {
-      const response = await api('/customers?size=1000')
-      customersList.value = response.content || response
+      if (confirm('¿Estás seguro que quieres borrar este vehículo?')) {
+        await api(`/vehicles/${id}`, 'DELETE')
+        await fetchVehicles()
+      }
     } catch (error) {
-      errorMessage.value = 'Error al cargar los clientes'
+      errorMessage.value = 'Error al eliminar el vehículo'
       console.error(error)
     }
   }
@@ -113,23 +113,23 @@ export function useVehicles() {
 
   return {
     vehicles,
-    fetchVehicles,
     form,
     errorMessage,
-    nextPage,
-    previousPage,
-    openModal,
-    closeModal,
-    openEditModal,
+    customersList,
     currentPage,
     totalPages,
     editingId,
     isModalOpen,
-    deleteVehicle,
-    submitVehicle,
-    customersList,
+    fetchVehicles,
     fetchCustomers,
-    getCustomerFullName,
+    submitVehicle,
+    deleteVehicle,
     resetForm,
+    openEditModal,
+    getCustomerFullName,
+    nextPage,
+    previousPage,
+    openModal,
+    closeModal,
   }
 }

@@ -2,6 +2,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import VehiclesView from '@/views/VehiclesView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import LoginView from '@/views/LoginView.vue'
+import { useAuth } from '@/composables/useAuth'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -9,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: { name: 'dashboard' },
+      redirect: { name: 'repairs' },
     },
     {
       path: '/login',
@@ -20,7 +21,10 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      meta: { requiresAuth: true },
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      },
     },
     {
       path: '/vehicles',
@@ -38,14 +42,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const isAuthenticated = !!localStorage.getItem('token')
+  const token = localStorage.getItem('token')
+  const { isAdmin } = useAuth()
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !token) {
     return { name: 'login' }
   }
 
-  if (to.name === 'login' && isAuthenticated) {
-    return { name: 'dashboard' }
+  if (to.meta.requiresAdmin && !isAdmin.value) {
+    return { name: 'repairs' }
   }
 
   return true

@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
+import MenuItem from './MenuItem.vue'
+import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
+const { isAdmin, logout } = useAuth()
+
 type ThemeMode = 'light' | 'dark' | 'system'
 
-const menuItems = ref([
-  { to: '/dashboard', label: 'Panel de control' },
-  { to: '/customers', label: 'Clientes' },
-  { to: '/vehicles', label: 'Vehículos' },
-])
+const baseMenuItems = [
+  { to: '/dashboard', label: 'Panel de control', adminOnly: true },
+  { to: '/customers', label: 'Clientes', adminOnly: false },
+  { to: '/vehicles', label: 'Vehículos', adminOnly: false },
+]
+
+const menuItems = computed(() => {
+  baseMenuItems.filter((item) => !item.adminOnly || isAdmin.value)
+})
+
 const themeMode = ref<ThemeMode>('system')
 
 const themeLabel = computed(() => {
@@ -77,11 +85,6 @@ onUnmounted(() => {
     .matchMedia('(prefers-color-scheme: dark)')
     .removeEventListener('change', handleSystemThemeChange)
 })
-
-function logout() {
-  localStorage.removeItem('token')
-  router.push('/login')
-}
 </script>
 
 <template>
