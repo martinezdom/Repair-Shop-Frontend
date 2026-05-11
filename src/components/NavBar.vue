@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import MenuItem from './MenuItem.vue'
 import { useAuth } from '@/composables/useAuth'
 
-const router = useRouter()
 const { isAdmin, logout } = useAuth()
 
 type ThemeMode = 'light' | 'dark' | 'system'

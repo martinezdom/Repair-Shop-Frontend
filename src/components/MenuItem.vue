@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
- <li class="">
+ <li>
  <RouterLink :to="to">{{ label }}</RouterLink>
  </li>
 </template>

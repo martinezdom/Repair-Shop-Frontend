@@ -29,3 +29,14 @@
   --radius-card: 16px;
   --radius-btn: 8px;
 }
+
+@layer components {
+  .form-input {
+    @apply bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .form-select {
+    @apply border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
+

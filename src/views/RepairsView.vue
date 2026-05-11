@@ -2,6 +2,8 @@
 import { onMounted } from 'vue'
 import { useRepairs } from '@/composables/useRepairs'
 import SpinnerIcon from '@/components/SpinnerIcon.vue'
+import DataTable from '@/components/DataTable.vue'
+import PaginationControls from '@/components/PaginationControls.vue'
 
 const {
   repairs,
@@ -42,72 +44,42 @@ onMounted(() => {
     class="text-text-on-light dark:text-text-on-dark flex flex-col justify-center gap-3 px-4 py-8"
   >
     <div v-if="!isModalOpen" class="flex flex-col gap-2">
-      <div class="flex justify-end gap-4">
-        <button
-          :disabled="currentPage === 0"
-          @click="previousPage()"
-          class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-600"
-        >
-          Anterior
-        </button>
-        <button
-          :disabled="currentPage === totalPages - 1"
-          @click="nextPage()"
-          class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-600"
-        >
-          Siguiente
-        </button>
-      </div>
-      <div
-        class="border-border-light dark:border-border-dark bg-bg-light dark:bg-bg-dark rounded-card w-full max-w-6xl overflow-hidden border"
-      >
-        <h2 v-if="errorMessage" class="px-6 pt-6 text-center text-red-700 dark:text-red-300">
-          {{ errorMessage }}
-        </h2>
+      <PaginationControls
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @previous="previousPage()"
+        @next="nextPage()"
+      />
+      <DataTable :errorMessage="errorMessage">
+        <template #thead>
+          <th class="px-4 py-4">Id</th>
+          <th class="px-4 py-4">Matrícula</th>
+          <th class="px-4 py-4">Estado</th>
+          <th class="px-4 py-4">Mecánico responsable</th>
+          <th class="px-4 py-4">Coste</th>
+          <th class="px-4 py-4">Descripción</th>
+          <th class="px-4 py-4">Acciones</th>
+        </template>
 
-        <table class="w-full text-center">
-          <thead
-            class="bg-bg-light text-muted-light dark:bg-bg-dark dark:text-text-on-dark text-sm"
-          >
-            <tr>
-              <th class="px-4 py-4">Id</th>
-              <th class="px-4 py-4">Matrícula</th>
-              <th class="px-4 py-4">Estado</th>
-              <th class="px-4 py-4">Mecánico responsable</th>
-              <th class="px-4 py-4">Coste</th>
-              <th class="px-4 py-4">Descripción</th>
-              <th class="px-4 py-4">Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody class="divide-border-light dark:divide-border-dark divide-y">
-            <tr v-for="repair in repairs" :key="String(repair.id)" class="">
-              <td class="px-4 py-4">{{ repair.id }}</td>
-              <td class="px-4 py-4">{{ repair.vehicleLicensePlate }}</td>
-              <td class="px-4 py-4">{{ formatStatus(repair.status) }}</td>
-              <td class="px-4 py-4">{{ repair.mechanicName }}</td>
-              <td class="px-4 py-4">{{ formatCost(repair.cost) }}</td>
-              <td class="px-4 py-4">{{ repair.description }}</td>
-              <td class="flex items-center justify-center gap-3 px-4 py-4">
-                <button @click="openEditModal(repair)" class="">
-                  <img
-                    src="../assets/icons/pencil.svg"
-                    alt="Editar"
-                    class="h-5 w-5 cursor-pointer dark:invert"
-                  />
-                </button>
-                <button @click="deleteRepair(repair.id)" class="">
-                  <img
-                    src="../assets/icons/trash.svg"
-                    alt="Eliminar"
-                    class="h-5 w-5 cursor-pointer dark:invert"
-                  />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <template #tbody>
+          <tr v-for="repair in repairs" :key="String(repair.id)">
+            <td class="px-4 py-4">{{ repair.id }}</td>
+            <td class="px-4 py-4">{{ repair.vehicleLicensePlate }}</td>
+            <td class="px-4 py-4">{{ formatStatus(repair.status) }}</td>
+            <td class="px-4 py-4">{{ repair.mechanicName }}</td>
+            <td class="px-4 py-4">{{ formatCost(repair.cost) }}</td>
+            <td class="px-4 py-4">{{ repair.description }}</td>
+            <td class="flex items-center justify-center gap-3 px-4 py-4">
+              <button @click="openEditModal(repair)">
+                <img src="../assets/icons/pencil.svg" alt="Editar" class="h-5 w-5 cursor-pointer dark:invert" />
+              </button>
+              <button @click="deleteRepair(repair.id)">
+                <img src="../assets/icons/trash.svg" alt="Eliminar" class="h-5 w-5 cursor-pointer dark:invert" />
+              </button>
+            </td>
+          </tr>
+        </template>
+      </DataTable>
     </div>
     <button
       v-if="!isModalOpen"
@@ -158,7 +130,7 @@ onMounted(() => {
             v-model="form.mechanicId"
             required
             :disabled="editingId !== null"
-            class="border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark accent-primary rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="form-select"
           >
             <option value="" disabled selected>Seleccione un mecánico</option>
             <option v-for="m in mechanicsList" :key="m.id" :value="m.id">
@@ -174,7 +146,7 @@ onMounted(() => {
             v-model="form.vehicleId"
             required
             :disabled="editingId !== null"
-            class="border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark accent-primary rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="form-select"
           >
             <option value="" disabled selected>Seleccione un vehículo</option>
             <option v-for="v in vehiclesList" :key="v.id" :value="v.id">
@@ -189,7 +161,7 @@ onMounted(() => {
             id="status"
             v-model="form.status"
             required
-            class="border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark accent-primary rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="form-select"
           >
             <option value="" disabled selected>Seleccione el estado</option>
             <option v-for="s in statusOptions" :key="s.value" :value="s.value">
@@ -205,7 +177,7 @@ onMounted(() => {
             v-model="form.cost"
             type="number"
             required
-            class="bg-bg-light text-text-on-light dark:bg-bg-dark dark:text-text-on-dark border-border-light dark:border-border-dark rounded-btn w-full border px-3 py-2"
+            class="form-input"
           />
         </div>
 
