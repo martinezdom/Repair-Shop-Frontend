@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useVehicles } from '@/composables/useVehicles'
+import SpinnerIcon from '@/components/SpinnerIcon.vue'
 
 const {
   vehicles,
@@ -22,6 +23,7 @@ const {
   fetchCustomers,
   getCustomerFullName,
   resetForm,
+  isSaving,
 } = useVehicles()
 
 onMounted(() => {
@@ -192,9 +194,11 @@ onMounted(() => {
 
         <button
           type="submit"
-          class="bg-primary mt-4 cursor-pointer rounded py-2 font-bold text-white"
+          :disabled="isSaving"
+          class="bg-primary mt-4 flex items-center justify-center gap-2 cursor-pointer rounded py-2 font-bold text-white disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Guardar vehículo
+          <SpinnerIcon v-if="isSaving" />
+          <span v-else>Guardar vehículo</span>
         </button>
       </form>
     </div>

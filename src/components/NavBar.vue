@@ -13,10 +13,11 @@ const baseMenuItems = [
   { to: '/dashboard', label: 'Panel de control', adminOnly: true },
   { to: '/customers', label: 'Clientes', adminOnly: false },
   { to: '/vehicles', label: 'Vehículos', adminOnly: false },
+  { to: '/repairs', label: 'Reparaciones', adminOnly: false },
 ]
 
 const menuItems = computed(() => {
-  baseMenuItems.filter((item) => !item.adminOnly || isAdmin.value)
+  return baseMenuItems.filter((item) => !item.adminOnly || isAdmin.value)
 })
 
 const themeMode = ref<ThemeMode>('system')

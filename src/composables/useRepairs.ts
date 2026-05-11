@@ -11,6 +11,7 @@ export function useRepairs() {
 
   const repairs = ref<Repair[]>([])
   const errorMessage = ref('')
+  const isSaving = ref(false)
   const form = ref({
     description: '',
     mechanicId: null as number | null,
@@ -58,6 +59,7 @@ export function useRepairs() {
   }
 
   async function submitRepair() {
+    isSaving.value = true
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -89,6 +91,8 @@ export function useRepairs() {
         errorMessage.value = 'Error al crear la reparación. Revisa los datos.'
       }
       console.error('Error enviando formulario:', error)
+    } finally {
+      isSaving.value = false
     }
   }
 
@@ -149,5 +153,6 @@ export function useRepairs() {
     nextPage,
     openModal,
     closeModal,
+    isSaving,
   }
 }

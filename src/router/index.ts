@@ -4,6 +4,7 @@ import CustomersView from '@/views/CustomersView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { useAuth } from '@/composables/useAuth'
 import { createRouter, createWebHistory } from 'vue-router'
+import RepairsView from '@/views/RepairsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,22 +39,33 @@ const router = createRouter({
       component: CustomersView,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/repairs',
+      name: 'repairs',
+      component: RepairsView,
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
 router.beforeEach((to) => {
   const token = localStorage.getItem('token')
-  const { isAdmin } = useAuth()
+  const { getUserRole } = useAuth()
+  
+  if (to.name === 'login' && token) {
+    return getUserRole() === 'ADMIN' ? { name: 'dashboard' } : { name: 'repairs' }
+  }
 
   if (to.meta.requiresAuth && !token) {
     return { name: 'login' }
   }
 
-  if (to.meta.requiresAdmin && !isAdmin.value) {
+  if (to.meta.requiresAdmin && getUserRole() !== 'ADMIN') {
     return { name: 'repairs' }
   }
 
   return true
 })
+
 
 export default router

@@ -16,6 +16,7 @@ export function useCustomers() {
   })
   const customers = ref<Customer[]>([])
   const errorMessage = ref('')
+  const isSaving = ref(false)
 
   async function fetchCustomers() {
     try {
@@ -29,6 +30,7 @@ export function useCustomers() {
   }
 
   async function submitCustomer() {
+    isSaving.value = true
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -60,6 +62,8 @@ export function useCustomers() {
         errorMessage.value = 'Error al crear el cliente. Revisa los datos.'
       }
       console.error('Error enviando formulario:', error)
+    } finally {
+      isSaving.value = false
     }
   }
 
@@ -114,6 +118,7 @@ export function useCustomers() {
     nextPage,
     previousPage,
     openModal,
-    closeModal
+    closeModal,
+    isSaving
   }
 }

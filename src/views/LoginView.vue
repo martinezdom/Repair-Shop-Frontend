@@ -2,8 +2,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '@/services/api'
+import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
+const { getUserRole } = useAuth()
 
 const email = ref('')
 const password = ref('')
@@ -22,7 +24,7 @@ async function login() {
 
     if (token) {
       localStorage.setItem('token', token)
-      router.push('/dashboard')
+      getUserRole() === 'ADMIN' ? router.push('/dashboard') : router.push('/repairs')
     }
   } catch (error) {
     errorMessage.value = 'Credenciales incorrectas. Inténtalo de nuevo.'

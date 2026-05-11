@@ -19,6 +19,7 @@ export function useVehicles() {
   })
   const vehicles = ref<Vehicle[]>([])
   const errorMessage = ref('')
+  const isSaving = ref(false)
   const customersList = ref<any[]>([])
 
   async function fetchVehicles() {
@@ -43,6 +44,7 @@ export function useVehicles() {
   }
 
   async function submitVehicle() {
+    isSaving.value = true
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -77,6 +79,8 @@ export function useVehicles() {
         errorMessage.value = 'Error al crear el vehículo. Revisa los datos.'
       }
       console.error('Error enviando formulario:', error)
+    } finally {
+      isSaving.value = false
     }
   }
 
@@ -131,5 +135,6 @@ export function useVehicles() {
     previousPage,
     openModal,
     closeModal,
+    isSaving,
   }
 }
