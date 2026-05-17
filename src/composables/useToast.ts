@@ -8,7 +8,6 @@ type Toast = {
   type: MessageType
 }
 
-// Estado fuera de la función → singleton compartido entre todos los que llamen a useToast()
 const toasts = ref<Toast[]>([])
 let nextId = 0
 
