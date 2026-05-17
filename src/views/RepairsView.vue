@@ -7,7 +7,6 @@ import PaginationControls from '@/components/PaginationControls.vue'
 
 const {
   repairs,
-  errorMessage,
   isModalOpen,
   editingId,
   form,
@@ -50,7 +49,7 @@ onMounted(() => {
         @previous="previousPage()"
         @next="nextPage()"
       />
-      <DataTable :errorMessage="errorMessage">
+      <DataTable>
         <template #thead>
           <th class="px-4 py-4">Id</th>
           <th class="px-4 py-4">Matrícula</th>

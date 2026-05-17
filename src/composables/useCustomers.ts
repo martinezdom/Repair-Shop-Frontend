@@ -3,10 +3,12 @@ import { api } from '@/services/api'
 import type { Customer } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
+import { useToast } from './useToast'
 
 export function useCustomers() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchCustomers)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
+  const { success, error } = useToast()
 
   const form = ref({
     firstName: '',
@@ -15,7 +17,6 @@ export function useCustomers() {
     phone: '',
   })
   const customers = ref<Customer[]>([])
-  const errorMessage = ref('')
   const isSaving = ref(false)
 
   async function fetchCustomers() {
@@ -23,14 +24,15 @@ export function useCustomers() {
       const response = await api(`/customers?page=${currentPage.value}`)
       customers.value = response.content || response
       totalPages.value = response.totalPages || 1
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los clientes'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar los clientes')
+      console.error(err)
     }
   }
 
   async function submitCustomer() {
     isSaving.value = true
+    const wasEditing = !!editingId.value
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -47,21 +49,13 @@ export function useCustomers() {
         }
         await api('/customers', 'POST', createPayload)
       }
+      success(wasEditing ? 'Cliente modificado correctamente' : 'Cliente creado correctamente')
       closeModal()
-      form.value = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-      }
+      form.value = { firstName: '', lastName: '', email: '', phone: '' }
       await fetchCustomers()
-    } catch (error) {
-      if (editingId.value) {
-        errorMessage.value = 'Error al modificar el cliente. Revisa los datos.'
-      } else {
-        errorMessage.value = 'Error al crear el cliente. Revisa los datos.'
-      }
-      console.error('Error enviando formulario:', error)
+    } catch (err) {
+      error(wasEditing ? 'Error al modificar el cliente' : 'Error al crear el cliente')
+      console.error('Error enviando formulario:', err)
     } finally {
       isSaving.value = false
     }
@@ -72,20 +66,16 @@ export function useCustomers() {
       if (confirm('¿Estás seguro que quieres borrar este cliente?')) {
         await api(`/customers/${id}`, 'DELETE')
         await fetchCustomers()
+        success('Cliente eliminado correctamente')
       }
-    } catch (error) {
-      errorMessage.value = 'Error al eliminar el cliente'
-      console.error(error)
+    } catch (err) {
+      error('Error al eliminar el cliente')
+      console.error(err)
     }
   }
 
   function resetForm() {
-    form.value = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-    }
+    form.value = { firstName: '', lastName: '', email: '', phone: '' }
   }
 
   function getCustomerFullName(customerId: number | null): string {
@@ -104,7 +94,6 @@ export function useCustomers() {
   return {
     customers,
     form,
-    errorMessage,
     currentPage,
     totalPages,
     editingId,
@@ -119,6 +108,6 @@ export function useCustomers() {
     previousPage,
     openModal,
     closeModal,
-    isSaving
+    isSaving,
   }
 }

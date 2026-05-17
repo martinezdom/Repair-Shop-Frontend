@@ -1,7 +1,6 @@
 import { computed } from 'vue'
 
 export function useAuth() {
-  // Función pura para leer y decodificar el rol en el momento
   function getUserRole(): string | null {
     const token = localStorage.getItem('token')
     if (!token) return null

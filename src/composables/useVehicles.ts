@@ -4,11 +4,13 @@ import type { Vehicle } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
 import { useCustomers } from './useCustomers'
+import { useToast } from './useToast'
 
 export function useVehicles() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchVehicles)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
   const { getCustomerFullName } = useCustomers()
+  const { success, error } = useToast()
 
   const form = ref({
     brand: '',
@@ -18,7 +20,6 @@ export function useVehicles() {
     customerId: null as number | null,
   })
   const vehicles = ref<Vehicle[]>([])
-  const errorMessage = ref('')
   const isSaving = ref(false)
   const customersList = ref<any[]>([])
 
@@ -27,9 +28,9 @@ export function useVehicles() {
       const response = await api(`/vehicles?page=${currentPage.value}`)
       vehicles.value = response.content || response
       totalPages.value = response.totalPages || 1
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los vehículos'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar los vehículos')
+      console.error(err)
     }
   }
 
@@ -37,14 +38,15 @@ export function useVehicles() {
     try {
       const response = await api('/customers?size=1000')
       customersList.value = response.content || response
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los clientes'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar los clientes')
+      console.error(err)
     }
   }
 
   async function submitVehicle() {
     isSaving.value = true
+    const wasEditing = !!editingId.value
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -63,22 +65,13 @@ export function useVehicles() {
         }
         await api('/vehicles', 'POST', createPayload)
       }
+      success(wasEditing ? 'Vehículo modificado correctamente' : 'Vehículo creado correctamente')
       closeModal()
-      form.value = {
-        brand: '',
-        model: '',
-        customerId: null,
-        year: null,
-        licensePlate: '',
-      }
+      form.value = { brand: '', model: '', customerId: null, year: null, licensePlate: '' }
       await fetchVehicles()
-    } catch (error) {
-      if (editingId.value) {
-        errorMessage.value = 'Error al modificar el vehículo. Revisa los datos.'
-      } else {
-        errorMessage.value = 'Error al crear el vehículo. Revisa los datos.'
-      }
-      console.error('Error enviando formulario:', error)
+    } catch (err) {
+      error(wasEditing ? 'Error al modificar el vehículo' : 'Error al crear el vehículo')
+      console.error('Error enviando formulario:', err)
     } finally {
       isSaving.value = false
     }
@@ -89,21 +82,16 @@ export function useVehicles() {
       if (confirm('¿Estás seguro que quieres borrar este vehículo?')) {
         await api(`/vehicles/${id}`, 'DELETE')
         await fetchVehicles()
+        success('Vehículo eliminado correctamente')
       }
-    } catch (error) {
-      errorMessage.value = 'Error al eliminar el vehículo'
-      console.error(error)
+    } catch (err) {
+      error('Error al eliminar el vehículo')
+      console.error(err)
     }
   }
 
   function resetForm() {
-    form.value = {
-      brand: '',
-      model: '',
-      customerId: null,
-      year: null,
-      licensePlate: '',
-    }
+    form.value = { brand: '', model: '', customerId: null, year: null, licensePlate: '' }
   }
 
   function openEditModal(vehicle: Vehicle) {
@@ -118,7 +106,6 @@ export function useVehicles() {
   return {
     vehicles,
     form,
-    errorMessage,
     customersList,
     currentPage,
     totalPages,

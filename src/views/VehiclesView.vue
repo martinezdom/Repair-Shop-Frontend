@@ -9,7 +9,6 @@ const {
   vehicles,
   fetchVehicles,
   form,
-  errorMessage,
   nextPage,
   previousPage,
   openModal,
@@ -44,7 +43,7 @@ onMounted(() => {
         @previous="previousPage()"
         @next="nextPage()"
       />
-      <DataTable :errorMessage="errorMessage">
+      <DataTable>
         <template #thead>
           <th class="px-4 py-4">Id</th>
           <th class="px-4 py-4">Marca</th>

@@ -4,13 +4,14 @@ import { formatStatus, formatCost } from '@/utils/main'
 import type { Repair } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
+import { useToast } from './useToast'
 
 export function useRepairs() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchRepairs)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
+  const { success, error } = useToast()
 
   const repairs = ref<Repair[]>([])
-  const errorMessage = ref('')
   const isSaving = ref(false)
   const form = ref({
     description: '',
@@ -32,9 +33,9 @@ export function useRepairs() {
       const response = await api(`/repairs?page=${currentPage.value}`)
       repairs.value = response.content || response
       totalPages.value = response.totalPages || 1
-    } catch (error) {
-      errorMessage.value = 'Error al cargar las reparaciones'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar las reparaciones')
+      console.error(err)
     }
   }
 
@@ -42,9 +43,9 @@ export function useRepairs() {
     try {
       const response = await api('/users?size=1000')
       mechanicsList.value = response.content || response
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los mecánicos'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar los mecánicos')
+      console.error(err)
     }
   }
 
@@ -52,14 +53,15 @@ export function useRepairs() {
     try {
       const response = await api('/vehicles?size=1000')
       vehiclesList.value = response.content || response
-    } catch (error) {
-      errorMessage.value = 'Error al cargar los vehículos'
-      console.error(error)
+    } catch (err) {
+      error('Error al cargar los vehículos')
+      console.error(err)
     }
   }
 
   async function submitRepair() {
     isSaving.value = true
+    const wasEditing = !!editingId.value
     try {
       if (editingId.value) {
         const updatePayload = {
@@ -75,22 +77,13 @@ export function useRepairs() {
         }
         await api('/repairs', 'POST', createPayload)
       }
+      success(wasEditing ? 'Reparación modificada correctamente' : 'Reparación creada correctamente')
       closeModal()
-      form.value = {
-        description: '',
-        mechanicId: null,
-        vehicleId: null,
-        status: null,
-        cost: null,
-      }
+      form.value = { description: '', mechanicId: null, vehicleId: null, status: null, cost: null }
       await fetchRepairs()
-    } catch (error) {
-      if (editingId.value) {
-        errorMessage.value = 'Error al modificar la reparación. Revisa los datos.'
-      } else {
-        errorMessage.value = 'Error al crear la reparación. Revisa los datos.'
-      }
-      console.error('Error enviando formulario:', error)
+    } catch (err) {
+      error(wasEditing ? 'Error al modificar la reparación' : 'Error al crear la reparación')
+      console.error('Error enviando formulario:', err)
     } finally {
       isSaving.value = false
     }
@@ -98,24 +91,19 @@ export function useRepairs() {
 
   async function deleteRepair(id: number) {
     try {
-      if (confirm('¿Estás seguro que quieres borrar está reparación?')) {
+      if (confirm('¿Estás seguro que quieres borrar esta reparación?')) {
         await api(`/repairs/${id}`, 'DELETE')
         await fetchRepairs()
+        success('Reparación eliminada correctamente')
       }
-    } catch (error) {
-      errorMessage.value = 'Error al eliminar la reparación'
-      console.error(error)
+    } catch (err) {
+      error('Error al eliminar la reparación')
+      console.error(err)
     }
   }
 
   function resetForm() {
-    form.value = {
-      description: '',
-      mechanicId: null,
-      vehicleId: null,
-      status: null,
-      cost: null,
-    }
+    form.value = { description: '', mechanicId: null, vehicleId: null, status: null, cost: null }
   }
 
   function openEditModal(repair: Repair) {
@@ -131,7 +119,6 @@ export function useRepairs() {
 
   return {
     repairs,
-    errorMessage,
     isModalOpen,
     editingId,
     form,

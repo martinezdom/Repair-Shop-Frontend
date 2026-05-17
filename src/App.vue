@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import ToastContainer from './components/ToastContainer.vue'
 
 const route = useRoute()
 </script>
@@ -14,5 +15,7 @@ const route = useRoute()
  <main class="container mx-auto flex min-h-screen items-center justify-center p-4">
  <RouterView />
  </main>
+
+ <ToastContainer />
  </div>
 </template>
