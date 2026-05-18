@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRepairs } from '@/composables/useRepairs'
+import { useAuth } from '@/composables/useAuth'
 import SpinnerIcon from '@/components/SpinnerIcon.vue'
 import DataTable from '@/components/DataTable.vue'
 import PaginationControls from '@/components/PaginationControls.vue'
+
+const { isAdmin } = useAuth()
 
 const {
   repairs,
@@ -59,20 +62,30 @@ onMounted(() => {
         </template>
 
         <template #tbody>
-          <tr v-for="repair in repairs" :key="String(repair.id)">
+          <tr v-for="repair in repairs" :key="String(repair.id)" class="table-row">
             <td class="table-cell">{{ repair.id }}</td>
             <td class="table-cell">{{ repair.vehicleLicensePlate }}</td>
             <td class="table-cell">{{ formatStatus(repair.status) }}</td>
             <td class="table-cell">{{ repair.mechanicName }}</td>
             <td class="table-cell">{{ formatCost(repair.cost) }}</td>
             <td class="table-cell">{{ repair.description }}</td>
-            <td class="table-cell flex items-center justify-center gap-3">
-              <button @click="openEditModal(repair)">
-                <img src="../assets/icons/pencil.svg" alt="Editar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
-              <button @click="deleteRepair(repair.id)">
-                <img src="../assets/icons/trash.svg" alt="Eliminar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
+            <td class="table-cell">
+              <div class="flex items-center justify-center gap-2">
+                <button @click="openEditModal(repair)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/pencil.svg"
+                    alt="Editar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+                <button v-if="isAdmin" @click="deleteRepair(repair.id)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/trash.svg"
+                    alt="Eliminar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+              </div>
             </td>
           </tr>
         </template>
@@ -87,8 +100,16 @@ onMounted(() => {
   <div v-if="isModalOpen" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="text-xl font-bold">{{ editingId ? 'Editar reparación' : 'Crear reparación' }}</h3>
-        <button @click="closeModal(); resetForm()" class="cursor-pointer">
+        <h3 class="text-xl font-bold">
+          {{ editingId ? 'Editar reparación' : 'Crear reparación' }}
+        </h3>
+        <button
+          @click="
+            closeModal();
+            resetForm()
+          "
+          class="cursor-pointer"
+        >
           <img src="../assets/icons/close-x.svg" alt="Cerrar" class="h-6 w-6 dark:invert" />
         </button>
       </div>
@@ -96,12 +117,24 @@ onMounted(() => {
       <form @submit.prevent="submitRepair" class="flex flex-col gap-4">
         <div class="form-field">
           <label for="description" class="font-medium">Descripción</label>
-          <textarea id="description" v-model="form.description" required :disabled="editingId !== null" class="form-input"></textarea>
+          <textarea
+            id="description"
+            v-model="form.description"
+            required
+            :disabled="editingId !== null"
+            class="form-input"
+          ></textarea>
         </div>
 
         <div class="form-field">
           <label for="mechanic" class="font-medium">Mecánico</label>
-          <select id="mechanic" v-model="form.mechanicId" required :disabled="editingId !== null" class="form-select">
+          <select
+            id="mechanic"
+            v-model="form.mechanicId"
+            required
+            :disabled="editingId !== null"
+            class="form-select"
+          >
             <option value="" disabled selected>Seleccione un mecánico</option>
             <option v-for="m in mechanicsList" :key="m.id" :value="m.id">{{ m.username }}</option>
           </select>
@@ -109,9 +142,17 @@ onMounted(() => {
 
         <div class="form-field">
           <label for="vehicle" class="font-medium">Vehículo</label>
-          <select id="vehicle" v-model="form.vehicleId" required :disabled="editingId !== null" class="form-select">
+          <select
+            id="vehicle"
+            v-model="form.vehicleId"
+            required
+            :disabled="editingId !== null"
+            class="form-select"
+          >
             <option value="" disabled selected>Seleccione un vehículo</option>
-            <option v-for="v in vehiclesList" :key="v.id" :value="v.id">{{ v.licensePlate }}</option>
+            <option v-for="v in vehiclesList" :key="v.id" :value="v.id">
+              {{ v.licensePlate }}
+            </option>
           </select>
         </div>
 
@@ -119,7 +160,9 @@ onMounted(() => {
           <label for="status" class="font-medium">Estado</label>
           <select id="status" v-model="form.status" required class="form-select">
             <option value="" disabled selected>Seleccione el estado</option>
-            <option v-for="s in statusOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+            <option v-for="s in statusOptions" :key="s.value" :value="s.value">
+              {{ s.label }}
+            </option>
           </select>
         </div>
 

@@ -39,11 +39,11 @@
   }
 
   .btn-primary {
-    @apply bg-primary dark:bg-primary-dark rounded-btn cursor-pointer px-6 py-3 font-semibold text-white;
+    @apply bg-primary dark:bg-primary-dark rounded-btn cursor-pointer px-6 py-3 font-semibold text-white transition-opacity hover:opacity-80;
   }
 
   .btn-submit {
-    @apply bg-primary mt-4 flex cursor-pointer items-center justify-center gap-2 rounded py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70;
+    @apply bg-primary mt-4 flex cursor-pointer items-center justify-center gap-2 rounded py-2 font-bold text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .modal-overlay {
@@ -64,5 +64,9 @@
 
   .table-cell {
     @apply px-4 py-4;
+  }
+
+  .table-row {
+    @apply transition-colors hover:bg-black/5 dark:hover:bg-white/5;
   }
 }

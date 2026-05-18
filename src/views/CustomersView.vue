@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useCustomers } from '@/composables/useCustomers'
+import { useAuth } from '@/composables/useAuth'
 import SpinnerIcon from '@/components/SpinnerIcon.vue'
 import DataTable from '@/components/DataTable.vue'
 import PaginationControls from '@/components/PaginationControls.vue'
+
+const { isAdmin } = useAuth()
 
 const {
   customers,
@@ -49,19 +52,29 @@ onMounted(() => {
         </template>
 
         <template #tbody>
-          <tr v-for="customer in customers" :key="String(customer.id)">
+          <tr v-for="customer in customers" :key="String(customer.id)" class="table-row">
             <td class="table-cell">{{ customer.id }}</td>
             <td class="table-cell">{{ customer.firstName }}</td>
             <td class="table-cell">{{ customer.lastName }}</td>
             <td class="table-cell">{{ customer.email }}</td>
             <td class="table-cell">{{ customer.phone }}</td>
-            <td class="table-cell flex items-center justify-center gap-3">
-              <button @click="openEditModal(customer)">
-                <img src="../assets/icons/pencil.svg" alt="Editar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
-              <button @click="deleteCustomer(customer.id)">
-                <img src="../assets/icons/trash.svg" alt="Eliminar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
+            <td class="table-cell">
+              <div class="flex items-center justify-center gap-2">
+                <button @click="openEditModal(customer)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/pencil.svg"
+                    alt="Editar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+                <button v-if="isAdmin" @click="deleteCustomer(customer.id)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/trash.svg"
+                    alt="Eliminar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+              </div>
             </td>
           </tr>
         </template>
@@ -77,7 +90,13 @@ onMounted(() => {
     <div class="modal-card">
       <div class="modal-header">
         <h3 class="text-xl font-bold">{{ editingId ? 'Editar cliente' : 'Crear cliente' }}</h3>
-        <button @click="closeModal(); resetForm()" class="cursor-pointer">
+        <button
+          @click="
+            closeModal();
+            resetForm()
+          "
+          class="cursor-pointer"
+        >
           <img src="../assets/icons/close-x.svg" alt="Cerrar" class="h-6 w-6 dark:invert" />
         </button>
       </div>
@@ -85,12 +104,24 @@ onMounted(() => {
       <form @submit.prevent="submitCustomer" class="flex flex-col gap-4">
         <div class="form-field">
           <label for="firstName" class="font-medium">Nombre</label>
-          <input id="firstName" v-model="form.firstName" required :disabled="editingId !== null" class="form-input" />
+          <input
+            id="firstName"
+            v-model="form.firstName"
+            required
+            :disabled="editingId !== null"
+            class="form-input"
+          />
         </div>
 
         <div class="form-field">
           <label for="lastName" class="font-medium">Apellidos</label>
-          <input id="lastName" v-model="form.lastName" required :disabled="editingId !== null" class="form-input" />
+          <input
+            id="lastName"
+            v-model="form.lastName"
+            required
+            :disabled="editingId !== null"
+            class="form-input"
+          />
         </div>
 
         <div class="form-field">

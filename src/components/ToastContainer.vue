@@ -16,9 +16,6 @@ const { toasts, removeToast } = useToast()
         'bg-error': toast.type === 'error',
       }"
     >
-      <span class="mt-0.5">
-        {{ toast.type === 'success' ? '✓' : '✕' }}
-      </span>
       <span>{{ toast.message }}</span>
     </div>
   </div>

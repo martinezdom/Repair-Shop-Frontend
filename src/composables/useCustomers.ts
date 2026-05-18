@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { api } from '@/services/api'
+import { api, ForbiddenError } from '@/services/api'
 import type { Customer } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
@@ -69,7 +69,11 @@ export function useCustomers() {
         success('Cliente eliminado correctamente')
       }
     } catch (err) {
-      error('Error al eliminar el cliente')
+      if (err instanceof ForbiddenError) {
+        error('No tienes permisos para realizar esta acción')
+      } else {
+        error('Error al eliminar el cliente')
+      }
       console.error(err)
     }
   }

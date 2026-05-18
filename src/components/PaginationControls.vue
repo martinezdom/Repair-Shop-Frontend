@@ -15,14 +15,14 @@ const emit = defineEmits<{
     <button
       :disabled="currentPage === 0"
       @click="emit('previous')"
-      class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-600"
+      class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:bg-gray-600"
     >
       Anterior
     </button>
     <button
       :disabled="currentPage === totalPages - 1"
       @click="emit('next')"
-      class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white disabled:cursor-not-allowed disabled:bg-gray-600"
+      class="bg-primary rounded-btn cursor-pointer px-5 py-2 text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:bg-gray-600"
     >
       Siguiente
     </button>

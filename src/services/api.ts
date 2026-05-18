@@ -1,5 +1,12 @@
 const BASE_URL = 'http://localhost:8080/api'
 
+export class ForbiddenError extends Error {
+  constructor() {
+    super('FORBIDDEN')
+    this.name = 'ForbiddenError'
+  }
+}
+
 export async function api(endpoint: string, method: string = 'GET', body?: any) {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -22,11 +29,16 @@ export async function api(endpoint: string, method: string = 'GET', body?: any) 
   const response = await fetch(`${BASE_URL}${endpoint}`, config)
 
   if (!response.ok) {
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
       localStorage.removeItem('token')
       window.location.href = '/login'
       throw new Error('Sesión caducada')
     }
+
+    if (response.status === 403) {
+      throw new ForbiddenError()
+    }
+
     throw new Error(`Error en la API: ${response.status}`)
   }
 

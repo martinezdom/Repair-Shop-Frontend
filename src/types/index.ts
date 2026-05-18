@@ -23,3 +23,9 @@ export type Customer = {
   email: string
   phone: string
 }
+
+export type DashboardStats = {
+  pendingCars: number
+  totalRevenue: number
+}
+

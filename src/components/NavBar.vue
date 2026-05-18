@@ -73,11 +73,11 @@ onUnmounted(() => {
     </ul>
 
     <div class="flex items-center gap-2">
-      <button @click="cycleTheme" class="bg-primary cursor-pointer rounded px-4 py-2 font-bold text-white">
+      <button @click="cycleTheme" class="bg-primary cursor-pointer rounded px-4 py-2 font-bold text-white transition-opacity hover:opacity-80">
         {{ themeLabel }}
       </button>
 
-      <button @click="logout" class="bg-error cursor-pointer rounded px-4 py-2 font-bold text-white">
+      <button @click="logout" class="bg-error cursor-pointer rounded px-4 py-2 font-bold text-white transition-opacity hover:opacity-80">
         Cerrar sesión
       </button>
     </div>

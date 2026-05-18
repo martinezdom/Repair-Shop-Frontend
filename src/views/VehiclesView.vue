@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useVehicles } from '@/composables/useVehicles'
+import { useAuth } from '@/composables/useAuth'
 import SpinnerIcon from '@/components/SpinnerIcon.vue'
 import DataTable from '@/components/DataTable.vue'
 import PaginationControls from '@/components/PaginationControls.vue'
+
+const { isAdmin } = useAuth()
 
 const {
   vehicles,
@@ -54,20 +57,30 @@ onMounted(() => {
         </template>
 
         <template #tbody>
-          <tr v-for="vehicle in vehicles" :key="String(vehicle.id)">
+          <tr v-for="vehicle in vehicles" :key="String(vehicle.id)" class="table-row">
             <td class="table-cell">{{ vehicle.id }}</td>
             <td class="table-cell">{{ vehicle.brand }}</td>
             <td class="table-cell">{{ vehicle.model }}</td>
             <td class="table-cell">{{ vehicle.licensePlate }}</td>
             <td class="table-cell">{{ vehicle.year }}</td>
             <td class="table-cell">{{ getCustomerFullName(Number(vehicle.customerId)) }}</td>
-            <td class="table-cell flex items-center justify-center gap-3">
-              <button @click="openEditModal(vehicle)">
-                <img src="../assets/icons/pencil.svg" alt="Editar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
-              <button @click="deleteVehicle(vehicle.id)">
-                <img src="../assets/icons/trash.svg" alt="Eliminar" class="h-5 w-5 cursor-pointer dark:invert" />
-              </button>
+            <td class="table-cell">
+              <div class="flex items-center justify-center gap-2">
+                <button @click="openEditModal(vehicle)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/pencil.svg"
+                    alt="Editar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+                <button v-if="isAdmin" @click="deleteVehicle(vehicle.id)" class="transition-transform hover:scale-110">
+                  <img
+                    src="../assets/icons/trash.svg"
+                    alt="Eliminar"
+                    class="h-5 w-5 cursor-pointer dark:invert"
+                  />
+                </button>
+              </div>
             </td>
           </tr>
         </template>
@@ -83,7 +96,13 @@ onMounted(() => {
     <div class="modal-card">
       <div class="modal-header">
         <h3 class="text-xl font-bold">{{ editingId ? 'Editar vehículo' : 'Crear vehículo' }}</h3>
-        <button @click="closeModal(); resetForm()" class="cursor-pointer">
+        <button
+          @click="
+            closeModal();
+            resetForm()
+          "
+          class="cursor-pointer"
+        >
           <img src="../assets/icons/close-x.svg" alt="Cerrar" class="h-6 w-6 dark:invert" />
         </button>
       </div>
@@ -101,7 +120,13 @@ onMounted(() => {
 
         <div class="form-field">
           <label for="licensePlate" class="font-medium">Matrícula</label>
-          <input id="licensePlate" v-model="form.licensePlate" required :disabled="editingId !== null" class="form-input" />
+          <input
+            id="licensePlate"
+            v-model="form.licensePlate"
+            required
+            :disabled="editingId !== null"
+            class="form-input"
+          />
         </div>
 
         <div class="form-field">
@@ -111,7 +136,13 @@ onMounted(() => {
 
         <div class="form-field">
           <label for="customerId" class="font-medium">Propietario</label>
-          <select id="customerId" v-model="form.customerId" required :disabled="editingId !== null" class="form-select">
+          <select
+            id="customerId"
+            v-model="form.customerId"
+            required
+            :disabled="editingId !== null"
+            class="form-select"
+          >
             <option value="" disabled selected>Seleccione un propietario</option>
             <option v-for="c in customersList" :key="c.id" :value="c.id">
               {{ c.firstName }} {{ c.lastName }}

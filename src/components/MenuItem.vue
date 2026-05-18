@@ -9,6 +9,6 @@ defineProps<{
 
 <template>
  <li>
- <RouterLink :to="to">{{ label }}</RouterLink>
+ <RouterLink :to="to" class="inline-block transition-transform hover:scale-110">{{ label }}</RouterLink>
  </li>
 </template>

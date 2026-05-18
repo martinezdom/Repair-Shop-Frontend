@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '@/services/api'
 import { useAuth } from '@/composables/useAuth'
+import { useToast } from '@/composables/useToast'
+import { ref } from 'vue'
 
 const router = useRouter()
 const { getUserRole } = useAuth()
+const { error } = useToast()
 
 const email = ref('')
 const password = ref('')
-const errorMessage = ref('')
 
 async function login() {
   try {
-    errorMessage.value = ''
     const response = await api('/auth/login', 'POST', {
       email: email.value,
       password: password.value,
@@ -23,9 +23,9 @@ async function login() {
       localStorage.setItem('token', token)
       getUserRole() === 'ADMIN' ? router.push('/dashboard') : router.push('/repairs')
     }
-  } catch (error) {
-    errorMessage.value = 'Credenciales incorrectas. Inténtalo de nuevo.'
-    console.error(error)
+  } catch (err) {
+    error('Credenciales incorrectas. Inténtalo de nuevo.')
+    console.error(err)
   }
 }
 </script>
@@ -63,12 +63,5 @@ async function login() {
         Entrar
       </button>
     </form>
-
-    <p
-      v-if="errorMessage"
-      class="rounded-btn mt-4 border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-800 dark:bg-red-950/60 dark:text-red-300"
-    >
-      {{ errorMessage }}
-    </p>
   </div>
 </template>

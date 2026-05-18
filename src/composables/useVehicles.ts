@@ -1,15 +1,13 @@
 import { ref } from 'vue'
-import { api } from '@/services/api'
+import { api, ForbiddenError } from '@/services/api'
 import type { Vehicle } from '@/types'
 import { usePagination } from '@/composables/usePagination'
 import { useModal } from './useModal'
-import { useCustomers } from './useCustomers'
 import { useToast } from './useToast'
 
 export function useVehicles() {
   const { currentPage, totalPages, nextPage, previousPage } = usePagination(fetchVehicles)
   const { isModalOpen, editingId, openModal, closeModal, openEditModal: openBaseModal } = useModal()
-  const { getCustomerFullName } = useCustomers()
   const { success, error } = useToast()
 
   const form = ref({
@@ -85,13 +83,22 @@ export function useVehicles() {
         success('Vehículo eliminado correctamente')
       }
     } catch (err) {
-      error('Error al eliminar el vehículo')
+      if (err instanceof ForbiddenError) {
+        error('No tienes permisos para realizar esta acción')
+      } else {
+        error('Error al eliminar el vehículo')
+      }
       console.error(err)
     }
   }
 
   function resetForm() {
     form.value = { brand: '', model: '', customerId: null, year: null, licensePlate: '' }
+  }
+
+  function getCustomerFullName(customerId: number | null): string {
+    const customer = customersList.value.find((c) => String(c.id) === String(customerId))
+    return customer ? `${customer.firstName} ${customer.lastName}` : 'Desconocido'
   }
 
   function openEditModal(vehicle: Vehicle) {

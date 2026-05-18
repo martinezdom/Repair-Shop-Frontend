@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { api } from '@/services/api'
+import { api, ForbiddenError } from '@/services/api'
 import { formatStatus, formatCost } from '@/utils/main'
 import type { Repair } from '@/types'
 import { usePagination } from '@/composables/usePagination'
@@ -97,7 +97,11 @@ export function useRepairs() {
         success('Reparación eliminada correctamente')
       }
     } catch (err) {
-      error('Error al eliminar la reparación')
+      if (err instanceof ForbiddenError) {
+        error('No tienes permisos para realizar esta acción')
+      } else {
+        error('Error al eliminar la reparación')
+      }
       console.error(err)
     }
   }
