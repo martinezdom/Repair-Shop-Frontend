@@ -2,7 +2,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Fondos y Texto (Modo Claro/Oscuro) */
   --color-bg-light: #f8fafc;
   --color-bg-dark: #0f172a;
   --color-text-on-light: #0f1724;
@@ -10,22 +9,18 @@
   --color-muted-light: #475569;
   --color-muted-dark: #94a3b8;
 
-  /* Bordes y Overlays */
   --color-border-light: #cbd5e1;
   --color-border-dark: #374151;
   --color-overlay-light: rgba(255, 255, 255, 0.8);
   --color-overlay-dark: rgba(15, 23, 36, 0.8);
 
-  /* Colores de Marca */
   --color-primary: #2563eb;
   --color-primary-dark: #1d4ed8;
 
-  /* Colores de Estado */
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-error: #dc2626;
 
-  /* Radio de bordes base */
   --radius-card: 16px;
   --radius-btn: 8px;
 }
@@ -38,5 +33,36 @@
   .form-select {
     @apply border-border-light bg-bg-light text-text-on-light dark:border-border-dark dark:bg-bg-dark dark:text-text-on-dark rounded border p-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
-}
 
+  .form-field {
+    @apply flex flex-col gap-1;
+  }
+
+  .btn-primary {
+    @apply bg-primary dark:bg-primary-dark rounded-btn cursor-pointer px-6 py-3 font-semibold text-white;
+  }
+
+  .btn-submit {
+    @apply bg-primary mt-4 flex cursor-pointer items-center justify-center gap-2 rounded py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-70;
+  }
+
+  .modal-overlay {
+    @apply bg-overlay-dark/60 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm;
+  }
+
+  .modal-card {
+    @apply border-border-light dark:border-border-dark bg-bg-light dark:bg-bg-dark rounded-card w-full max-w-lg border p-6;
+  }
+
+  .modal-header {
+    @apply mb-6 flex items-center justify-between;
+  }
+
+  .view-wrapper {
+    @apply text-text-on-light dark:text-text-on-dark flex flex-col gap-3 px-4 py-8;
+  }
+
+  .table-cell {
+    @apply px-4 py-4;
+  }
+}

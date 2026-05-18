@@ -5,13 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    class="border-border-light dark:border-border-dark bg-bg-light dark:bg-bg-dark rounded-card w-full max-w-6xl overflow-hidden border"
-  >
-    <h2 v-if="errorMessage" class="px-6 pt-6 text-center text-red-700 dark:text-red-300">
-      {{ errorMessage }}
-    </h2>
-
+  <div class="border-border-light dark:border-border-dark bg-bg-light dark:bg-bg-dark rounded-card w-full max-w-6xl overflow-hidden border">
     <table class="w-full text-center">
       <thead class="bg-bg-light text-muted-light dark:bg-bg-dark dark:text-text-on-dark text-sm">
         <tr>
